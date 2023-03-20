@@ -1,0 +1,258 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DAMIENFOUGERE/MSPR-IA/1.0.0
+  - description: Dolibarr API entry point
+    url: 'http://localhost/dolibarr/api/index.php'
+info:
+  description: Cette API est faite pour simplifier l'interface avec Dolibarr
+  version: "1.0.0"
+  title: Dolibarr ERP API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: products
+    description: Products informations
+  - name: login
+    description: Login creds
+paths:
+  /login:
+    post:
+      tags:
+        - login
+      summary: get credentials
+      operationId: login
+      description: |
+        By passing in the appropriate options, you can get your 
+        credentials to log in.
+      parameters: 
+        - in: header
+          name: listLoginModel
+          description:  login (required)
+                        password (required)
+                        entity
+                        reset
+          required: true
+          schema:
+            $ref: '#/components/schemas/listLoginModel'
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoginCreds'
+        '403':
+          description: Access denied
+        '500':
+          description: System error
+          
+  /products:
+    get:
+      tags:
+        - products
+      summary: get all products
+      operationId: allProducts
+      description: |
+        By passing in the appropriate options, you can get all current 
+        products available or not.
+      parameters:
+        - in: query
+          name: sortfield
+          description: Sort field
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: sortorder
+          description: Sort order
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: limit
+          description: Limit for list
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Products'
+        '403':
+          description: Access denied
+        '500':
+          description: System error
+  /products/{id}:
+    get:
+      tags:
+        - products
+      summary: get current id product
+      operationId: product
+      description: |
+        By passing in the appropriate options, you can get the current 
+        product available or not.
+      parameters:
+        - in: path
+          name: id
+          description: Product id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+components:
+  schemas:
+    listLoginModel:
+      type: object
+      required: 
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          example: 'djhon'
+        password:
+          type: string
+          example: 'MySecretPass123!'
+          
+    LoginCreds:
+      type: object
+      required:
+        - code
+        - token
+        - entity
+        - message
+      properties:
+        code:
+          type: integer
+          example: 200
+        token:
+          type: string
+          example: 'b4c25ca55685d3746c1f6f1cb7094c'
+        entity:
+          type: string
+          example: '1'
+        message:
+          type: string
+          example: 'Welcome jdubois - This is your token (recorded for your user). You can use it to make any REST API call, or enter it into the DOLAPIKEY field to use the Dolibarr API explorer.'
+    Products:
+      type: array
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+            example: "Vélos Compétition"
+          description:
+            type: string
+            example: "Fait pour la course"
+          other:
+            type: string
+            example: "Course"
+          type:
+            type: string
+            example: '0'
+          price:
+            type: string
+            example: '299.00000000'
+          price_ttc:
+            type: string
+            example: '358.80000000'
+          price_min:
+            type: string
+            example: '199.00000000'
+          price_min_ttc:
+            type: string
+            example: '238.80000000'
+          price_base_type:
+            type: string
+            example: 'HT'
+          tva_tx:
+            type: string
+            example: '20.0000'
+          stock_reel:
+            type: string
+            example: '5'
+          status:
+            type: string
+            example: '1'
+          url:
+            type: string
+            example: '0'
+          id:
+            type: string
+            example: '1'
+          ref:
+            type: string
+            example: '00001'
+    Product:
+      type: object
+      properties:
+        label:
+          type: string
+          example: "Vélos Compétition"
+        description:
+          type: string
+          example: "Fait pour la course"
+        other:
+          type: string
+          example: "Course"
+        type:
+          type: string
+          example: '0'
+        price:
+          type: string
+          example: '299.00000000'
+        price_ttc:
+          type: string
+          example: '358.80000000'
+        price_min:
+          type: string
+          example: '199.00000000'
+        price_min_ttc:
+          type: string
+          example: '238.80000000'
+        price_base_type:
+          type: string
+          example: 'HT'
+        tva_tx:
+          type: string
+          example: '20.0000'
+        stock_reel:
+          type: string
+          example: '5'
+        status:
+          type: string
+          example: '1'
+        url:
+          type: string
+          example: '0'
+        id:
+          type: string
+          example: '1'
+        ref:
+          type: string
+          example: '00001'
